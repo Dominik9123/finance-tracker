@@ -1,0 +1,53 @@
+.history-container {
+  margin: 100px auto;
+  padding: 20px;
+  background-color: #222;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.history-container h1 {
+  padding-bottom: 35px;
+}
+
+.transaction-history-list {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-bottom: 1px solid #444;
+  font-size: 18px;
+}
+
+.transaction-item.income {
+  color: #27ae60; /* Zielony dla przychodów */
+}
+
+.transaction-item.expense {
+  color: #c0392b; /* Czerwony dla wydatków */
+}
+
+.transaction-amount {
+  font-weight: bold;
+}
+
+.transaction-date {
+  font-style: italic;
+  color: #bbb;
+}
+
+.transaction-type {
+  text-transform: uppercase;
+  font-weight: bold;
+}
