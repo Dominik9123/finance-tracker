@@ -23,14 +23,22 @@ const Dashboard = () => {
   const [salary, setSalary] = useState("");
   const [date, setDate] = useState("");
   const [salaries, setSalaries] = useState([]);
-  const [totalBalance, setTotalBalance] = useState(0);
   
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [currency, setCurrency] = useState("USD ($)");
+
   const [expenses, setExpenses] = useState({});
   const [expenseList, setExpenseList] = useState([]);
 
   useEffect(() => {
-    const savedSalaries = localStorage.getItem("salaries");
-    const savedExpenses = localStorage.getItem("expenses");
+
+    const savedCurrency = localStorage.getItem("currency") || "USD ($)";
+    setCurrency(savedCurrency);
+   
+    const savedSalaries = JSON.parse(localStorage.getItem("salaries") || "[]");
+    const savedExpenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+
+    
 
     try {
       const parsedSalaries = savedSalaries ? JSON.parse(savedSalaries) : [];
@@ -39,8 +47,11 @@ const Dashboard = () => {
       setSalaries(parsedSalaries);
       setExpenseList(parsedExpenses);
       
-      const total = parsedSalaries.reduce((sum, s) => sum + s.amount, 0);
-      setTotalBalance(total);
+       const totalIncome = savedSalaries.reduce((sum, s) => sum + s.amount, 0);
+       const totalExpenses = savedExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+      setTotalBalance(totalIncome - totalExpenses); // Odejmujemy Wydatki od totalBalance
+
     } catch (error) {
       console.error("Błąd odczytu danych z localStorage", error);
       setSalaries([]);
@@ -93,28 +104,27 @@ const Dashboard = () => {
   const visibleSalaries = salaries.slice(-5);
 
   const data = {
-    labels: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.date) : ["No Data"],
-    datasets: [
-      {
-        label: "Income",
-        data: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.amount) : [0],
-        backgroundColor: visibleSalaries.map((_, index) => colors[index % colors.length]), 
-        borderColor: "#a55b00",
-        borderWidth: 1,
-      },
-    ],
-  };
+  labels: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.date) : ["No Data"],
+  datasets: [
+    {
+      label: `Income (${currency})`, // Uwzględniamy walutę
+      data: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.amount) : [0],
+      backgroundColor: visibleSalaries.map((_, index) => colors[index % colors.length]), 
+      borderColor: "#a55b00",
+      borderWidth: 1,
+    },
+  ],
+};
 
   const expenseData = {
-    labels: expenseList.map(exp => `${exp.category}: $${exp.amount}`), // Dodany symbol dolara do etykiet
-    datasets: [
-      {
-        data: expenseList.map(exp => exp.amount),
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9C27B0", "#FF9800", "#E91E63", "#3F51B5", "#00BCD4", "#8BC34A"],
-      },
-    ],
-  };
-
+  labels: expenseList.map(exp => `${exp.category}: ${currency} ${exp.amount}`),
+  datasets: [
+    {
+      data: expenseList.map(exp => exp.amount),
+      backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9C27B0", "#FF9800", "#E91E63", "#3F51B5", "#00BCD4", "#8BC34A"],
+    },
+  ],
+};
   return (
     <div className="dashboard">
       <h1 className="outlined-text">Dashboard</h1> 
@@ -143,7 +153,7 @@ const Dashboard = () => {
 
       <div className="balance-container">
         <h3>Total Balance 💵</h3>
-        <p>${totalBalance}</p>
+        <p>{currency} {totalBalance.toFixed(2)}</p>
       </div>
 
       <div className="chart-container">
@@ -158,8 +168,8 @@ const Dashboard = () => {
             <span>{name}</span>
             <input
               type="number"
-              value={`$${expenses[name] || ""}`}
-              onChange={(e) => handleExpenseChange(name, e.target.value.replace(/\$/g, ""))}
+              value={expenses[name] || ""}
+              onChange={(e) => handleExpenseChange(name, e.target.value)}
               placeholder="Amount :"
               min="0"
             />

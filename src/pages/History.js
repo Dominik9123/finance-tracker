@@ -3,8 +3,13 @@ import "./History.css";
 
 const History = () => {
   const [transactions, setTransactions] = useState([]);
+  const [currency, setCurrency] = useState("USD ($)");
 
   useEffect(() => {
+    
+     const savedCurrency = localStorage.getItem("currency") || "USD ($)";
+      setCurrency(savedCurrency);
+
     const savedExpenses = localStorage.getItem("expenses");
     const savedIncomes = localStorage.getItem("salaries");
 
@@ -28,6 +33,26 @@ const History = () => {
     }
   }, []);
 
+ const getCategoryIcon = (category) => {
+   if (!category) return "💵 Income";
+
+  const icons = {
+    "Housing": "🏠",
+    "Food": "🍔",
+    "Transport": "🚗",
+    "Entertainment": "🎉",
+    "Shopping": "🛒",
+    "HealthCare": "💊",
+    "Travel": "✈️",
+    "Savings": "📈",
+    "Education": "📚",
+    "Debt's": "💳",
+    "Income": "💵 Income",
+  };
+  return icons[category?.trim()] || "❓ Unknown";
+ };
+
+
   return (
     <div className="history-container">
       <h1 className="outlined-text">Transaction History</h1>
@@ -35,9 +60,11 @@ const History = () => {
         {transactions.map((transaction, index) => (
           <li key={index} className={`transaction-item ${transaction.type.toLowerCase()}`}>
             <span className="transaction-amount">
-              {transaction.type === "Income" ? "+" : "-"}${transaction.amount}
+            {transaction.type === "Income" ? "+" : "-"} {currency} {transaction.amount.toFixed(2)}
             </span>
-            <span className="transaction-type">{transaction.type}</span>
+            <span className="transaction-category">
+              {getCategoryIcon(transaction.category)} {transaction.category}
+            </span>
             <span className="transaction-date">{transaction.date}</span>
           </li>
         ))}

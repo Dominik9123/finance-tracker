@@ -1,0 +1,80 @@
+.confirm-button, .reset-button {
+  flex: 1; /* Przyciski równomiernie zajmują miejsce */
+  padding: 12px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reset-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.reset-button:hover {
+    background-color: #2ecc71;
+}
+
+.confirm-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #9900ff;
+}
+
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    padding: 20px;
+    
+    
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+}
+
+.currency-select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+}
+
+.currency-select:hover {
+    border-color: #222;
+}
+
+
+.confirmation-message {
+  color: green;
+  font-size: 16px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.button-container {
+  display: flex;
+  gap: 15px; 
+  margin-top: 15px;
+}
+
