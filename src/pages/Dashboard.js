@@ -159,7 +159,6 @@ useEffect(() => {
         </div>
         
 
-
       </div>
 
       <div className="chart-container">
