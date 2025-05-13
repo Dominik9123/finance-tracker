@@ -7,7 +7,7 @@ import Settings from "./pages/Settings";
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/finance-tracker">
       <Navbar />
       <main className="container">
         <Routes>
