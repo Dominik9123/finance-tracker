@@ -5,7 +5,7 @@
   color: white;
   border-radius: 10px;
   text-align: center;
-  width: 80%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,4 +95,21 @@
 
 .transaction-category, .transaction-date {
   font-size: 14px;
+}
+@media (max-width: 768px) {
+  .history-container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .transaction-item {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+  }
+
+  .filters {
+    flex-direction: column;
+    gap: 8px;
+  }
 }

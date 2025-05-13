@@ -30,6 +30,7 @@ p {
 }
 
 .dashboard {
+   width: 90%;
     max-width: 500px;
     margin: auto;
     text-align: center;
@@ -93,8 +94,9 @@ button {
 
 .balance-wrapper {
   display: flex;
-  justify-content: center;
-  gap: 20px; /* Odstęp między „Total Balance” i „Annual Budget” */
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .balance-container, .budget-box {
@@ -267,13 +269,26 @@ input[type="number"]::-webkit-outer-spin-button {
     background-color: #2ecc71;
   }
   
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .expense-grid {
-      grid-template-columns: repeat(2, 1fr); /* 2 kolumny dla małych ekranów */
-      grid-template-rows: auto;
+      grid-template-columns: repeat(2, 1fr);
     }
 
     .expense-tile {
-      height: 100px;
+      height: 120px;
+      width: 120px;
     }
-  }
+
+    .balance-container {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .expense-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+}
