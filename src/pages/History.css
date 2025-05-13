@@ -51,3 +51,48 @@
   text-transform: uppercase;
   font-weight: bold;
 }
+
+.history-container {
+  padding: 20px;
+  color: white;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.filters label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #FFA500;
+}
+
+.filters input, .filters select {
+  padding: 8px;
+  border: 2px solid #FFA500;
+  border-radius: 6px;
+  background-color: #222;
+  color: white;
+  font-size: 14px;
+}
+
+.transaction-history-list {
+  list-style: none;
+  padding: 0;
+}
+
+
+.transaction-item.income {
+  color: #4CAF50;
+}
+
+.transaction-item.expense {
+  color: #FF5733;
+}
+
+.transaction-category, .transaction-date {
+  font-size: 14px;
+}

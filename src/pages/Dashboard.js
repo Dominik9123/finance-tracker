@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend } from "chart.js";
-import { FaHome, FaUtensils, FaCar, FaTheaterMasks, FaShoppingCart, FaBriefcaseMedical, FaPlane, FaChartLine, FaBook, FaMoneyBillWave  } from "react-icons/fa";
+import { FaHome, FaUtensils, FaCar, FaTheaterMasks, FaShoppingCart, FaBriefcaseMedical, FaPlane, FaChartLine, FaBook, FaMoneyBillWave, FaFolderOpen } from "react-icons/fa";
 import "./Dashboard.css";
 
 ChartJS.register(CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend);
@@ -12,53 +12,53 @@ const categories = [
   { name: "Transport", icon: <FaCar /> },
   { name: "Entertainment", icon: <FaTheaterMasks /> },
   { name: "Shopping", icon: <FaShoppingCart /> },
-  { name: "HealthCare", icon: <FaBriefcaseMedical />},
-  { name: "Travel", icon: <FaPlane />},
-  { name: "Savings", icon: <FaChartLine />},
-  { name: "Education", icon: <FaBook />},
-  { name: "Debt's", icon: <FaMoneyBillWave  />},
+  { name: "HealthCare", icon: <FaBriefcaseMedical /> },
+  { name: "Travel", icon: <FaPlane /> },
+  { name: "Savings", icon: <FaChartLine /> },
+  { name: "Education", icon: <FaBook /> },
+  { name: "Debt's", icon: <FaMoneyBillWave /> },
 ];
 
 const Dashboard = () => {
   const [salary, setSalary] = useState("");
   const [date, setDate] = useState("");
   const [salaries, setSalaries] = useState([]);
-  
   const [totalBalance, setTotalBalance] = useState(0);
   const [currency, setCurrency] = useState("USD ($)");
 
   const [expenses, setExpenses] = useState({});
   const [expenseList, setExpenseList] = useState([]);
+  const [customCategories, setCustomCategories] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
+    // Pobieranie zapisanych kategorii użytkownika
+    const savedCustomCategories = JSON.parse(localStorage.getItem("customCategories") || "[]");
+    setCustomCategories(savedCustomCategories);
 
+    // Pobieranie zapisanej waluty
     const savedCurrency = localStorage.getItem("currency") || "USD ($)";
     setCurrency(savedCurrency);
-   
+
+    // Pobieranie danych finansowych
     const savedSalaries = JSON.parse(localStorage.getItem("salaries") || "[]");
     const savedExpenses = JSON.parse(localStorage.getItem("expenses") || "[]");
 
-    
+    setSalaries(savedSalaries);
+    setExpenseList(savedExpenses);
 
-    try {
-      const parsedSalaries = savedSalaries ? JSON.parse(savedSalaries) : [];
-      const parsedExpenses = savedExpenses ? JSON.parse(savedExpenses) : [];
+}, []); // Uruchamiamy tylko raz po załadowaniu komponentu
 
-      setSalaries(parsedSalaries);
-      setExpenseList(parsedExpenses);
-      
-       const totalIncome = savedSalaries.reduce((sum, s) => sum + s.amount, 0);
-       const totalExpenses = savedExpenses.reduce((sum, e) => sum + e.amount, 0);
+useEffect(() => {
+    const totalIncome = salaries.reduce((sum, s) => sum + s.amount, 0);
+    const totalExpenses = expenseList.reduce((sum, e) => sum + e.amount, 0);
 
-      setTotalBalance(totalIncome - totalExpenses); // Odejmujemy Wydatki od totalBalance
+    // Aktualizujemy saldo tylko jeśli wartość faktycznie się zmieniła
+    setTotalBalance(prevBalance => {
+        const newBalance = totalIncome - totalExpenses;
+        return prevBalance !== newBalance ? newBalance : prevBalance;
+    });
+}, [salaries, expenseList]); // Aktualizujemy tylko gdy zmienia się salaries lub expenseList
 
-    } catch (error) {
-      console.error("Błąd odczytu danych z localStorage", error);
-      setSalaries([]);
-      setExpenseList([]);
-      setTotalBalance(0);
-    }
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -147,13 +147,19 @@ const Dashboard = () => {
           onChange={(e) => setDate(e.target.value)} 
           required 
         />
-        <button type="submit">Add Payout</button>
+        <button type="submit" className="button-payout">Add Payout</button>
         <p className="label-text">Clicking on "Income" hides the chart</p>
       </form>
 
-      <div className="balance-container">
+      <div className="balance-wrapper">
+
+        <div className="balance-container">
         <h3>Total Balance 💵</h3>
         <p>{currency} {totalBalance.toFixed(2)}</p>
+        </div>
+        
+
+
       </div>
 
       <div className="chart-container">
@@ -162,25 +168,25 @@ const Dashboard = () => {
 
       <h2 className="outlined-text expense-title">Add Expense</h2>
       <div className="expense-grid">
-        {categories.map(({ name, icon }) => (
-          <div key={name} className="expense-tile">
-            <div className="expense-icon">{icon}</div>
-            <span>{name}</span>
-            <input
-              type="number"
-              value={expenses[name] || ""}
-              onChange={(e) => handleExpenseChange(name, e.target.value)}
-              placeholder="Amount :"
-              min="0"
+        {categories.concat(customCategories).map(({ name, icon }) => (
+        <div key={name} className="expense-tile">
+          <div className="expense-icon">{icon ? icon : <FaFolderOpen />}</div>
+          <span>{name}</span>
+          <input
+            type="number"
+            value={expenses[name] || ""}
+            onChange={(e) => handleExpenseChange(name, e.target.value)}
+            placeholder="Amount :"
+            min="0"
             />
           </div>
         ))}
       </div>
 
       <button className="expense-submit-button" onClick={handleExpenseSubmit}>
-        Submit
+        Add Expense
       </button>
-      <p className="label-text">Clicking on category hides the part from the chart</p>
+      <p className="label-text">Clicking on "Category" hides the part from the chart</p>
       
       <div className="chart-container">
       <Pie key={JSON.stringify(expenseList)} data={expenseData} />
