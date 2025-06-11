@@ -14,7 +14,7 @@ Dzięki niej możesz dodawać przychody, wydatki oraz analizować historię tran
 
 ## ✨ Demo (Live Version)  
 🔗 **Zobacz Finance Tracker na GitHub Pages:**  
-👉 **[https://Dominik9123.github.io/finanse-tracker/](https://Dominik9123.github.io/finanse-tracker/)**  
+👉 **[https://dominik9123.github.io/finanse-tracker/](https://dominik9123.github.io/finanse-tracker/)**  
 
 ---
 
