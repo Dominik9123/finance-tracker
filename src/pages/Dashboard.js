@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { FaHome, FaUtensils, FaCar, FaTheaterMasks, FaShoppingCart, FaBriefcaseMedical, FaPlane, FaChartLine, FaBook, FaMoneyBillWave, FaFolderOpen } from "react-icons/fa";
+<<<<<<< HEAD
 import "./Dashboard.css";
+=======
+import "./Dashboard.scss";
+import LoginModal from "../components/LoginModal";
+>>>>>>> b61b58b (Initial commit)
 
 ChartJS.register(CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend);
 
@@ -20,6 +25,10 @@ const categories = [
 ];
 
 const Dashboard = () => {
+<<<<<<< HEAD
+=======
+  const [showLogin, setShowLogin] = useState(true);
+>>>>>>> b61b58b (Initial commit)
   const [salary, setSalary] = useState("");
   const [date, setDate] = useState("");
   const [salaries, setSalaries] = useState([]);
@@ -128,6 +137,10 @@ useEffect(() => {
   return (
     <div className="dashboard">
       <h1 className="outlined-text">Dashboard</h1> 
+<<<<<<< HEAD
+=======
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+>>>>>>> b61b58b (Initial commit)
 
       <form onSubmit={handleSubmit}>
         <label className="label-text">Salary Amount:</label>
