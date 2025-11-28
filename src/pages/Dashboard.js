@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { FaHome, FaUtensils, FaCar, FaTheaterMasks, FaShoppingCart, FaBriefcaseMedical, FaPlane, FaChartLine, FaBook, FaMoneyBillWave, FaFolderOpen } from "react-icons/fa";
-<<<<<<< HEAD
-import "./Dashboard.css";
-=======
 import "./Dashboard.scss";
-import LoginModal from "../components/LoginModal";
->>>>>>> b61b58b (Initial commit)
 
 ChartJS.register(CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend);
 
@@ -25,10 +20,6 @@ const categories = [
 ];
 
 const Dashboard = () => {
-<<<<<<< HEAD
-=======
-  const [showLogin, setShowLogin] = useState(true);
->>>>>>> b61b58b (Initial commit)
   const [salary, setSalary] = useState("");
   const [date, setDate] = useState("");
   const [salaries, setSalaries] = useState([]);
@@ -39,35 +30,29 @@ const Dashboard = () => {
   const [expenseList, setExpenseList] = useState([]);
   const [customCategories, setCustomCategories] = useState([]);
 
- useEffect(() => {
-    // Pobieranie zapisanych kategorii użytkownika
+  useEffect(() => {
     const savedCustomCategories = JSON.parse(localStorage.getItem("customCategories") || "[]");
     setCustomCategories(savedCustomCategories);
 
-    // Pobieranie zapisanej waluty
     const savedCurrency = localStorage.getItem("currency") || "USD ($)";
     setCurrency(savedCurrency);
 
-    // Pobieranie danych finansowych
     const savedSalaries = JSON.parse(localStorage.getItem("salaries") || "[]");
     const savedExpenses = JSON.parse(localStorage.getItem("expenses") || "[]");
 
     setSalaries(savedSalaries);
     setExpenseList(savedExpenses);
+  }, []);
 
-}, []); // Uruchamiamy tylko raz po załadowaniu komponentu
-
-useEffect(() => {
+  useEffect(() => {
     const totalIncome = salaries.reduce((sum, s) => sum + s.amount, 0);
     const totalExpenses = expenseList.reduce((sum, e) => sum + e.amount, 0);
 
-    // Aktualizujemy saldo tylko jeśli wartość faktycznie się zmieniła
     setTotalBalance(prevBalance => {
-        const newBalance = totalIncome - totalExpenses;
-        return prevBalance !== newBalance ? newBalance : prevBalance;
+      const newBalance = totalIncome - totalExpenses;
+      return prevBalance !== newBalance ? newBalance : prevBalance;
     });
-}, [salaries, expenseList]); // Aktualizujemy tylko gdy zmienia się salaries lub expenseList
-
+  }, [salaries, expenseList]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -95,7 +80,7 @@ useEffect(() => {
 
   const handleExpenseSubmit = () => {
     const newExpenses = Object.entries(expenses)
-      .filter(([_, amount]) => amount) // Filtrujemy tylko wpisane wartości
+      .filter(([_, amount]) => amount)
       .map(([category, amount]) => ({
         category,
         amount: Number(amount),
@@ -113,34 +98,31 @@ useEffect(() => {
   const visibleSalaries = salaries.slice(-5);
 
   const data = {
-  labels: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.date) : ["No Data"],
-  datasets: [
-    {
-      label: `Income (${currency})`, // Uwzględniamy walutę
-      data: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.amount) : [0],
-      backgroundColor: visibleSalaries.map((_, index) => colors[index % colors.length]), 
-      borderColor: "#a55b00",
-      borderWidth: 1,
-    },
-  ],
-};
+    labels: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.date) : ["No Data"],
+    datasets: [
+      {
+        label: `Income (${currency})`,
+        data: visibleSalaries.length > 0 ? visibleSalaries.map(s => s.amount) : [0],
+        backgroundColor: visibleSalaries.map((_, index) => colors[index % colors.length]),
+        borderColor: "#a55b00",
+        borderWidth: 1,
+      },
+    ],
+  };
 
   const expenseData = {
-  labels: expenseList.map(exp => `${exp.category}: ${currency} ${exp.amount}`),
-  datasets: [
-    {
-      data: expenseList.map(exp => exp.amount),
-      backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9C27B0", "#FF9800", "#E91E63", "#3F51B5", "#00BCD4", "#8BC34A"],
-    },
-  ],
-};
+    labels: expenseList.map(exp => `${exp.category}: ${currency} ${exp.amount}`),
+    datasets: [
+      {
+        data: expenseList.map(exp => exp.amount),
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9C27B0", "#FF9800", "#E91E63", "#3F51B5", "#00BCD4", "#8BC34A"],
+      },
+    ],
+  };
+
   return (
     <div className="dashboard">
-      <h1 className="outlined-text">Dashboard</h1> 
-<<<<<<< HEAD
-=======
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
->>>>>>> b61b58b (Initial commit)
+      <h1 className="outlined-text">Dashboard</h1>
 
       <form onSubmit={handleSubmit}>
         <label className="label-text">Salary Amount:</label>
@@ -165,13 +147,10 @@ useEffect(() => {
       </form>
 
       <div className="balance-wrapper">
-
         <div className="balance-container">
-        <h3>Total Balance 💵</h3>
-        <p>{currency} {totalBalance.toFixed(2)}</p>
+          <h3>Total Balance 💵</h3>
+          <p>{currency} {totalBalance.toFixed(2)}</p>
         </div>
-        
-
       </div>
 
       <div className="chart-container">
@@ -181,15 +160,15 @@ useEffect(() => {
       <h2 className="outlined-text expense-title">Add Expense</h2>
       <div className="expense-grid">
         {categories.concat(customCategories).map(({ name, icon }) => (
-        <div key={name} className="expense-tile">
-          <div className="expense-icon">{icon ? icon : <FaFolderOpen />}</div>
-          <span>{name}</span>
-          <input
-            type="number"
-            value={expenses[name] || ""}
-            onChange={(e) => handleExpenseChange(name, e.target.value)}
-            placeholder="Amount :"
-            min="0"
+          <div key={name} className="expense-tile">
+            <div className="expense-icon">{icon ? icon : <FaFolderOpen />}</div>
+            <span>{name}</span>
+            <input
+              type="number"
+              value={expenses[name] || ""}
+              onChange={(e) => handleExpenseChange(name, e.target.value)}
+              placeholder="Amount :"
+              min="0"
             />
           </div>
         ))}
@@ -199,11 +178,10 @@ useEffect(() => {
         Add Expense
       </button>
       <p className="label-text">Clicking on "Category" hides the part from the chart</p>
-      
-      <div className="chart-container">
-      <Pie key={JSON.stringify(expenseList)} data={expenseData} />
-      </div>
 
+      <div className="chart-container">
+        <Pie key={JSON.stringify(expenseList)} data={expenseData} />
+      </div>
     </div>
   );
 };

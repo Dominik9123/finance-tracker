@@ -1,10 +1,5 @@
 {
-<<<<<<< HEAD
   "homepage": "https://Dominik9123.github.io/finance-tracker/",
-  "name": "finanse-calc",
-  "version": "0.1.0",
-  "private": true,
-=======
   "name": "finance-tracker",
   "version": "1.0.0",
   "private": true,
@@ -14,7 +9,6 @@
     "finance",
     "tracker"
   ],
-  "homepage": "https://Dominik9123.github.io/finance-tracker/",
   "bugs": {
     "url": "https://github.com/Dominik9123/finance-tracker/issues"
   },
@@ -33,7 +27,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
->>>>>>> b61b58b (Initial commit)
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -47,22 +40,9 @@
     "react-router-dom": "^7.5.3",
     "react-scripts": "5.0.1",
     "react-scroll": "^1.9.3",
-<<<<<<< HEAD
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "predeploy":"npm run build",
-    "deploy":"gh-pages -d build",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-=======
     "sass": "^1.94.2",
     "web-vitals": "^2.1.4"
   },
->>>>>>> b61b58b (Initial commit)
   "eslintConfig": {
     "extends": [
       "react-app",
