@@ -1,10 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend } from "chart.js";
-import { FaHome, FaUtensils, FaCar, FaTheaterMasks, FaShoppingCart, FaBriefcaseMedical, FaPlane, FaChartLine, FaBook, FaMoneyBillWave, FaFolderOpen } from "react-icons/fa";
+import ChartsRow from "../components/ChartsRow";
+import "../components/ChartsRow.scss";
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title
+} from "chart.js";
+
+import {
+  FaHome,
+  FaUtensils,
+  FaCar,
+  FaTheaterMasks,
+  FaShoppingCart,
+  FaBriefcaseMedical,
+  FaPlane,
+  FaChartLine,
+  FaBook,
+  FaMoneyBillWave,
+  FaFolderOpen
+} from "react-icons/fa";
+
 import "./Dashboard.scss";
 
-ChartJS.register(CategoryScale, LinearScale, ArcElement, BarElement, Title, Tooltip, Legend);
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title
+);
+
 
 const categories = [
   { name: "Housing", icon: <FaHome /> },
@@ -110,15 +150,93 @@ const Dashboard = () => {
     ],
   };
 
-  const expenseData = {
-    labels: expenseList.map(exp => `${exp.category}: ${currency} ${exp.amount}`),
+  const aggregatedExpenses = expenseList.reduce((acc, curr) => {
+    acc[curr.category] = (acc[curr.category] || 0) + curr.amount;
+    return acc;
+  }, {});
+
+  const expenseLabels = Object.keys(aggregatedExpenses);
+  const expenseAmounts = Object.values(aggregatedExpenses);
+
+  const barExpenseData = {
+    labels: expenseLabels,
     datasets: [
       {
-        data: expenseList.map(exp => exp.amount),
+        label: `Expenses (${currency})`,
+        data: expenseAmounts,
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9C27B0", "#FF9800", "#E91E63", "#3F51B5", "#00BCD4", "#8BC34A"],
+        borderColor: '#fff', 
+        borderWidth: 1,
       },
     ],
   };
+
+  const barOptions = {
+    indexAxis: 'y', 
+    responsive: true,
+    maintainAspectRatio: false, 
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: '#ffffff', 
+        },
+      },
+      title: {
+        display: true,
+        text: 'Expenses by Category',
+        color: '#ffffff', 
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#ffffff', 
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)', 
+        }
+      },
+      y: {
+        barPercentage: 0.8, 
+        categoryPercentage: 0.8, 
+        ticks: {
+          color: '#ffffff', 
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)', 
+        }
+      }
+    }
+  };
+  
+  const incomeOptions = {
+      responsive: true,
+      maintainAspectRatio: false, 
+      plugins: {
+          legend: {
+              position: 'top',
+              labels: {
+                  color: '#ffffff',
+              },
+          },
+      },
+      scales: {
+          x: {
+              ticks: { color: '#ffffff' },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' }
+          },
+          y: {
+              ticks: { color: '#ffffff' },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' }
+          }
+      }
+  };
+
+  // OBLICZANIE DYNAMICZNEJ WYSOKOŚCI:
+  // 60px na kategorię + 100px marginesu (dla tytułu/legendy)
+  const dynamicHeight = Math.max(expenseLabels.length * 60 + 100, 300); 
+
 
   return (
     <div className="dashboard">
@@ -149,13 +267,22 @@ const Dashboard = () => {
       <div className="balance-wrapper">
         <div className="balance-container">
           <h3>Total Balance 💵</h3>
-          <p>{currency} {totalBalance.toFixed(2)}</p>
+          
+          <p className={`balance-amount ${totalBalance < 0 ? "negative" : "positive"}`}>
+            {currency} {totalBalance.toFixed(2)}
+          </p>
         </div>
       </div>
 
       <div className="chart-container">
-        <Bar key={JSON.stringify(salaries)} data={data} />
+        <Bar data={data} options={incomeOptions} />
       </div>
+
+      <ChartsRow
+      salaries={salaries}
+      expenseList={expenseList}
+      currency={currency}
+      />
 
       <h2 className="outlined-text expense-title">Add Expense</h2>
       <div className="expense-grid">
@@ -177,10 +304,10 @@ const Dashboard = () => {
       <button className="expense-submit-button" onClick={handleExpenseSubmit}>
         Add Expense
       </button>
-      <p className="label-text">Clicking on "Category" hides the part from the chart</p>
-
-      <div className="chart-container">
-        <Pie key={JSON.stringify(expenseList)} data={expenseData} />
+      
+      <div className="chart-container" style={{ height: `${dynamicHeight}px` }}>
+        {/* Przekazujemy dynamiczną wysokość do DIV i usuwamy height z komponentu Bar */}
+        <Bar data={barExpenseData} options={barOptions} /> 
       </div>
     </div>
   );
